@@ -1,2 +1,2 @@
 # AtCoder
-AtCoderの精進
+ACの記録用

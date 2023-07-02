@@ -1,30 +1,32 @@
 import heapq
-
-
 n, m = map(int, input().split())
 list_p = list(map(int, input().split()))
 ans = sum(list_p)
-list_p.sort()
+list_p.sort(reverse=True)
 
 list_l = list(map(int, input().split()))
-list_lef = []
-for i in range(m):
-    list_lef.append([list_l[i], i])
-list_lef.sort(reverse=True)
-
 list_d = list(map(int, input().split()))
 
-hq = []
-for i in range(n):
-    # 値段が安い順
-    price = list_p[i]
-    while len(list_lef) > 0 and price >= list_lef[-1][0]:
-        # 値段が高い順に並んでいるのを後ろから確認
-        # クーポンが使える場合
-        lef, li = list_lef.pop()
-        heapq.heappush(hq, list_d[li] * -1)
-    if len(hq) > 0:
-        dis = heapq.heappop(hq) * -1
-        ans -= dis
+list_ld = []
+for i in range(m):
+    lef = list_l[i]
+    dis = list_d[i] * -1
+    list_ld.append([lef, dis])
+list_ld.sort(reverse=True)
+
+can_used = []
+while len(list_p) > 0:
+    price = list_p.pop()
+    while len(list_ld) > 0:
+        lef, dis = list_ld.pop()
+        dis *= -1
+        if price >= lef:
+            heapq.heappush(can_used, dis * -1)
+        else:
+            list_ld.append([lef, dis * -1])
+            break
+    while len(can_used) > 0:
+        ans -= heapq.heappop(can_used) * -1
+        break
 
 print(ans)
